@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.rnr.example.graphql.shop.main.repository.ProductMapper">
+   
+   <resultMap type="product" id="productResult">
+      <id property="id" column="ID"/>
+      <result property="name" column="NAME"/>
+      <result property="description" column="DESCRIPTION"/>
+      <result property="price" column="PRICE"/>
+      <result property="noItems" column="NO_ITEMS"/>
+      <result property="restockDate" column="RESTOCK_DATE"/>
+      <result property="availableRegions" column="AVAILABLE_REGIONS"/>
+   </resultMap>
+   
+   <select id="getRestockDate" parameterType="int" resultType="java.sql.Date">
+      SELECT RESTOCK_DATE FROM PRODUCTS where id=#{id}
+   </select>
+   
+   <select id="availableRegions" parameterType="int" resultType="java.lang.String">
+      SELECT AVAILABLE_REGIONS FROM PRODUCTS where id=#{id}
+   </select>
+ 
+</mapper>

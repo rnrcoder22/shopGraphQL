@@ -1,0 +1,6 @@
+interface Person {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    address: Address
+}

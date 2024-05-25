@@ -1,0 +1,30 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.rnr.example.graphql.shop.main.repository.ClientMapper">
+   
+   <resultMap id="clientResult" type="client">
+      <result property="id" javaType="int" column="ID"/>
+      <!-- property field are 'reachable' by setting getter/setter on the corresponding POJO-->
+      <result property="firstName" javaType="java.lang.String" column="FIRST_NAME"/>
+      <result property="lastName" javaType="java.lang.String" column="LAST_NAME"/>
+      <result property="createDate" javaType="java.sql.Date" column="CREATE_DATE"/>
+      <!--This is the way we can relate entities in one-to-one relationships in mybatis-->
+      <association property="address" 
+        resultMap="com.rnr.example.graphql.shop.main.repository.AddressMapper.AddressResult"/>
+   </resultMap>
+   
+   
+   <select id="findById" parameterType="int" resultMap="clientResult">
+      SELECT cl.id, cl.first_name, 
+            cl.last_name,
+            cl.create_date,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM clients cl
+        inner join address a on cl.address_id = a.id
+        inner join countries c on a.country_id = c.id
+        where cl.id = #{id};
+   </select>
+</mapper>

@@ -1,0 +1,42 @@
+
+type Query{
+    customers: [Customer]!
+    hierarchy: [Root]!
+}
+
+type Customer{
+    id: ID!
+    name: String
+    age: Int
+    city: String
+    #Note that this field does not exist in the corresponding the POJO version
+    summary: String
+    orders: [CustomerOrder]!
+}
+
+type CustomerOrder{
+    id: ID!
+    description: String
+}
+
+type Root {
+    description: String
+    level1 : Level1
+}
+type Level1 {
+    description: String
+    level2 : Level2
+}
+type Level2 {
+    description: String
+    level3: Level3
+}
+type Level3 {
+    level4: Level4
+    description: String
+}
+
+type Level4 {
+    id: ID
+    description: String
+}

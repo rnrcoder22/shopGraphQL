@@ -1,0 +1,91 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.rnr.example.graphql.shop.repository.StaffMapper">
+   
+   <resultMap id="staffResult" type="staff">
+      <result property="id" javaType="int" column="ID"/>
+      <!-- property field are 'reachable' by setting getter/setter on the corresponding POJO-->
+      <result property="firstName" javaType="java.lang.String" column="FIRST_NAME"/>
+      <result property="lastName" javaType="java.lang.String" column="LAST_NAME"/>
+      <result property="hireDate" javaType="java.sql.Date" column="HIRE_DATE"/>
+<!--      <result property="terminationDate" javaType="java.sql.Date" column="TERMINATION_DATE"/>-->
+      <result property="salary" javaType="java.math.BigDecimal" column="SALARY"/>
+      <result property="disabled" javaType="boolean" column="DISABLED"/>
+      <!--This is the way we can relate entities in one-to-one relationships in mybatis-->
+      <association property="address" 
+        resultMap="com.rnr.example.graphql.shop.main.repository.AddressMapper.AddressResult"/>
+   </resultMap>
+   
+   <resultMap id="formerStaffResult" type="formerStaff" extends="staffResult">
+      <result property="terminationDate" javaType="java.sql.Date" column="TERMINATION_DATE"/>
+   </resultMap>
+   
+   <select id="findById" parameterType="int" resultMap="staffResult">
+      SELECT s.id, s.first_name, 
+            s.last_name, s.hire_date, 
+            s.birth_date, s.salary, s.disabled,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM staff s
+        inner join address a on s.address_id = a.id
+        inner join countries c on a.country_id = c.id
+        where s.id = #{id};
+   </select>
+   
+   <select id="findAll" resultMap="staffResult">
+      SELECT s.id, s.first_name, 
+            s.last_name, s.hire_date, 
+            s.birth_date, s.salary, s.disabled,
+            s.termination_date,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM staff s
+        inner join address a on s.address_id = a.id
+        inner join countries c on a.country_id = c.id
+   </select>
+   
+   <select id="findCurrentStaff" resultMap="staffResult">
+      SELECT s.id, s.first_name, 
+            s.last_name, s.hire_date, s.termination_date,
+            s.birth_date, s.salary, s.disabled,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM staff s
+        inner join address a on s.address_id = a.id
+        inner join countries c on a.country_id = c.id
+        where s.termination_date is null;
+   </select>
+   
+   <select id="findFormerStaff" resultMap="staffResult">
+      SELECT s.id, s.first_name, 
+            s.last_name, s.hire_date, s.termination_date,
+            s.birth_date, s.salary, s.disabled,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM staff s
+        inner join address a on s.address_id = a.id
+        inner join countries c on a.country_id = c.id
+        where s.termination_date is NOT null;
+   </select>
+   
+   <insert id="insertStaff" parameterType="staff">
+       INSERT INTO staff(FIRST_NAME,LAST_NAME,HIRE_DATE,SALARY) 
+            VALUES(#{firstName}, #{lastName}, #{hireDate}, #{salary});
+   </insert>
+   
+   <select id="findStaffWithinSalary" parameterType="salaryRange" resultMap="staffResult">
+      SELECT s.id, s.first_name, 
+            s.last_name, s.hire_date, s.termination_date,
+            s.birth_date, s.salary, s.disabled,
+            a.address, a.city, a.zip_code, 
+            c.country
+        FROM staff s
+        inner join address a on s.address_id = a.id
+        inner join countries c on a.country_id = c.id
+        where s.termination_date is null
+            and s.salary BETWEEN #{minimum} and #{maximum};
+   </select>
+   
+</mapper>

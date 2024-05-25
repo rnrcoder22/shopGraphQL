@@ -1,0 +1,19 @@
+
+type Query{
+    customers: [Customer]!
+}
+
+type Customer{
+    id: ID!
+    name: String
+    age: Int
+    city: String
+    #Note that this field does not exist in the corresponding the POJO version
+    summary: String
+    orders: [CustomerOrder]!
+}
+
+type CustomerOrder{
+    id: ID!
+    description: String
+}

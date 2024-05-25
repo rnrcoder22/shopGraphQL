@@ -1,0 +1,21 @@
+type Product {
+    id: ID!
+    name: String!
+    description: String
+    price: Float
+    noItems: Int
+    status: Status!
+}
+
+type Stock {
+    restockDate: Date
+}
+
+type regionAvailability {
+    regions: [String]
+}
+
+enum Status{
+    AVAILABLE
+    SOLD_OUT
+}

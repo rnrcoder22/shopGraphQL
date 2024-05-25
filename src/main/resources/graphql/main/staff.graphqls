@@ -1,0 +1,45 @@
+type Staff implements Person{
+    id: ID!
+    firstName: String!
+    lastName: String!
+    #We make this field non-required to simplify the mutation/creation of a new Staff
+    address: Address
+    hireDate: Date!
+    terminationDate: Date
+    salary: NonNegativeFloat!
+}
+
+type FormerStaff implements Person{
+    id: ID!
+    firstName: String!
+    lastName: String!
+    address: Address
+    terminationDate: Date
+    salary: NonNegativeFloat!
+}
+
+input StaffInput {
+    firstName: String!
+    lastName: String!
+    hireDate: Date!
+    salary: NonNegativeFloat!
+}
+
+input SalaryInput {
+    minimum: NonNegativeFloat
+    maximum: NonNegativeFloat
+}
+
+union CombinedStaff = Staff | FormerStaff
+
+extend type Query{
+    staffId(id: ID): Staff
+    staff: [Staff]
+    formerStaff: [Staff]
+    allStaff: [Staff]
+    staffSalary(range: SalaryInput): [Staff]!
+}
+
+extend type Mutation {
+    newStaff(staff: StaffInput): Staff
+}

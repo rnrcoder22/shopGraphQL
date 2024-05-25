@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="country" type="com.rnr.example.graphql.shop.main.model.Country"/>
+        <typeAlias alias="address" type="com.rnr.example.graphql.shop.main.model.Address"/>
+        <typeAlias alias="staff" type="com.rnr.example.graphql.shop.main.model.Staff"/>
+        <typeAlias alias="formerStaff" type="com.rnr.example.graphql.shop.main.model.FormerStaff"/>
+        <typeAlias alias="client" type="com.rnr.example.graphql.shop.main.model.Client"/>
+        <typeAlias alias="order" type="com.rnr.example.graphql.shop.main.model.Order"/>
+        <typeAlias alias="orderDetails" type="com.rnr.example.graphql.shop.main.model.OrderDetails"/>
+        <typeAlias alias="product" type="com.rnr.example.graphql.shop.main.model.Product"/>
+        <typeAlias alias="salaryRange" type="com.rnr.example.graphql.shop.main.model.input.SalaryRange"/>
+    </typeAliases>
+    
+    <typeHandlers>
+      <typeHandler handler="com.rnr.example.graphql.shop.main.configuration.handlers.OrderStatusHandler"/>
+    </typeHandlers>
+    
+    <mappers>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/CountryMapper.xml"/>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/AddressMapper.xml"/>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/StaffMapper.xml"/>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/ClientMapper.xml"/>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/OrderMapper.xml"/>
+        <mapper resource="com/rnr/example/graphql/shop/main/repository/ProductMapper.xml"/>
+    </mappers>
+</configuration>

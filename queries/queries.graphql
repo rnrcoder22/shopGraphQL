@@ -1,0 +1,103 @@
+query MyQuery {
+  staffAll {
+    id
+    firstName
+    lastName
+    address {
+      country{
+        country
+      }
+      zipCode
+    }
+  }
+}
+
+query MyQuery2 {
+  staffId(id: 1) {
+    id
+    firstName
+    lastName
+    address {
+      address
+      city
+      zipCode
+      country {
+        country
+      }
+    }
+  }
+}
+
+query client {
+  clientById(id: 4) {
+    id
+    firstName
+    lastName
+    address {
+      address
+      city
+      zipCode
+      country {
+        country
+      }
+    }
+  }
+}
+
+mutation country {
+ #Note that the param name must match with what is defined in the schema. See commented piece below.
+  newCountry(input:{
+    country: "Mexico"
+  }) {
+    country
+  }
+}
+
+query {
+	orderById(id: 1){
+    client {
+      firstName
+      lastName
+    }
+    orderDate
+    billingAddress 
+  }
+}
+
+
+mutation {
+	updateOrderStatus(id: 1, orderStatus: DELIVERED){
+    id
+    orderDate
+    billingAddress
+    orderStatus
+  }   
+}
+
+fragment cliFragment on Client{
+    firstName
+    lastName
+}
+
+query {
+	ordersByClient(id: 2){
+    orderDate
+    billingAddress
+	#client {
+    #  firstName
+  	#	lastName
+    #}
+    client{
+    	... cliFragment
+    }
+  }
+}
+
+mutation{
+  updateOrderStatus(id: 3, orderStatus: NON_DELIVERED){
+    client{
+      firstName
+    }
+    orderDate
+  }
+} 

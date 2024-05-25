@@ -1,0 +1,12 @@
+type Client implements Person{
+    id: ID!
+    firstName: String!
+    lastName: String!
+    address: Address!
+    locked: Boolean
+}
+
+extend type Query {
+    clientById(id: Int): Client
+    clientByName(firstName: String, lastName: String): [Client]
+}

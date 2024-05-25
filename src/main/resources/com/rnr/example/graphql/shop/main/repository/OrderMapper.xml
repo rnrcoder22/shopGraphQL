@@ -1,0 +1,53 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.rnr.example.graphql.shop.main.repository.OrderMapper">
+   
+   <resultMap id="orderResult" type="order">
+      <result property="id" javaType="int" column="ID"/>
+      <result property="orderDate" javaType="java.sql.Date" column="ORDER_DATE"/>
+      <result property="orderStatus" typeHandler="com.rnr.example.graphql.shop.main.configuration.handlers.OrderStatusHandler" column="ORDER_STATUS"/>
+      <result property="billingAddress" javaType="java.lang.String" column="BILLING_ADDRESS"/>
+      <association property="client" resultMap="com.rnr.example.graphql.shop.main.repository.ClientMapper.clientResult"/>
+<!--      <collection property="orderDetails" resultMap="orderDetailResult"/>-->
+   </resultMap>
+   
+   <resultMap id="orderDetailResult" type="orderDetails">
+      <result property="id" javaType="int" column="ID"/>
+      <result property="quantity" javaType="int" column="QUANTITY"/>
+      <association property="product" resultMap="com.rnr.example.graphql.shop.main.repository.ProductMapper.productResult"/>
+   </resultMap>
+   
+   <insert id="insertOrder" parameterType="order">
+       INSERT INTO orders (CLIENT_ID,ORDER_DATE,STATUS,BILLING_ADDRESS) 
+         VALUES(#{client.id}, #{orderDate}, #{orderStatus}, #{billingAddress})
+   </insert>
+   <select id="findById" parameterType="int" resultMap="orderResult">
+      SELECT ord.id, order_date, order_status, billing_address, cl.first_name, cl.last_name,
+         FROM ORDERS ord
+         INNER JOIN CLIENTS cl ON ord.client_id = cl.id
+         WHERE ord.id = #{id} 
+   </select>
+   <select id="findOrdersByClient" parameterType="int" resultMap="orderResult">
+      SELECT ord.id, order_date, order_status, billing_address, cl.first_name, cl.last_name
+         FROM ORDERS ord
+         INNER JOIN CLIENTS cl ON ord.client_id = cl.id
+         WHERE ord.client_id = #{id} 
+   </select>
+   
+   <select id="findOrderWithDetails" parameterType="int" resultMap="orderResult">
+      SELECT ord.id, order_date, order_status, 
+            billing_address, cl.first_name, cl.last_name, 
+            prd.name, prd.description, prd.price, odt.quantity
+         FROM ORDERS ord
+         INNER JOIN CLIENTS cl ON ord.client_id = cl.id
+         INNER JOIN ORDERSDETAILS odt ON odt.ORDER_ID=ord.ID
+         INNER JOIN PRODUCTS prd ON odt.PRODUCT_ID=prd.ID
+         WHERE ord.id =1
+   </select>
+      
+   <update id="updateStatus">
+      UPDATE ORDERS SET order_status=#{orderStatus} WHERE id=#{id}
+   </update>
+</mapper>
